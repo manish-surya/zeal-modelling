@@ -113,7 +113,7 @@ export default function Step2Client({ project, dataset, existingPipeline }: Step
       status: "in_progress",
     }).eq("id", project.id);
 
-    router.push(`/project/${project.id}/step3`);
+    router.push(`/project?id=${project.id}&step=3`);
   };
 
   const BLOCK_CATEGORIES = [

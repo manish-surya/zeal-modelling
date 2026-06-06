@@ -40,7 +40,7 @@ export default function ProjectCard({
   const [saving, setSaving] = useState(false);
 
   const navigateToProject = () => {
-    router.push(`/project/${project.id}/step${project.current_step}`);
+    router.push(`/project?id=${project.id}&step=${project.current_step}`);
   };
 
   const handleRename = async () => {

@@ -24,7 +24,7 @@ export default function Step4Client({ project, job }: Step4ClientProps) {
           <AlertCircle className="w-12 h-12 text-[#E67E22] mb-4" />
           <h3 className="text-base font-semibold text-[#1A1A1A] mb-2">No completed training job</h3>
           <p className="text-sm text-[#666666] mb-6">Complete a training job in Step 3 first.</p>
-          <Button onClick={() => router.push(`/project/${project.id}/step3`)}>
+          <Button onClick={() => router.push(`/project?id=${project.id}&step=3`)}>
             Go to Modelling
           </Button>
         </div>
@@ -208,7 +208,7 @@ export default function Step4Client({ project, job }: Step4ClientProps) {
       </div>
 
       <div className="flex justify-end mt-8">
-        <Button onClick={() => router.push(`/project/${project.id}/step5`)} size="lg">
+        <Button onClick={() => router.push(`/project?id=${project.id}&step=5`)} size="lg">
           Proceed to Export
           <ArrowRight className="w-4 h-4" />
         </Button>

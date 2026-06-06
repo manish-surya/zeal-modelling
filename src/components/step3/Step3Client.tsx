@@ -221,7 +221,7 @@ export default function Step3Client({ project, pipeline, latestJob }: Step3Clien
             <Button
               size="sm"
               onClick={() => {
-                router.push(`/project/${project.id}/step4`);
+                router.push(`/project?id=${project.id}&step=4`);
               }}
             >
               View Results

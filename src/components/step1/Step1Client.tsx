@@ -141,7 +141,7 @@ export default function Step1Client({ project, existingDataset, userId }: Step1C
       status: "in_progress",
     }).eq("id", project.id);
 
-    router.push(`/project/${project.id}/step2`);
+    router.push(`/project?id=${project.id}&step=2`);
   };
 
   const isComplete =

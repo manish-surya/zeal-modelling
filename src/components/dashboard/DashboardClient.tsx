@@ -33,7 +33,7 @@ export default function DashboardClient({
 
   const handleProjectCreated = (project: Project) => {
     setProjects((prev) => [project, ...prev]);
-    router.push(`/project/${project.id}/step1`);
+    router.push(`/project?id=${project.id}&step=1`);
   };
 
   const handleProjectDeleted = (id: string) => {

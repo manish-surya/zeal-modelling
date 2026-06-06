@@ -26,7 +26,7 @@ export default function WizardProgressBar({
 
   const navigate = (stepNum: number) => {
     if (stepNum <= completedUpTo) {
-      router.push(`/project/${projectId}/step${stepNum}`);
+      router.push(`/project?id=${projectId}&step=${stepNum}`);
     }
   };
 
