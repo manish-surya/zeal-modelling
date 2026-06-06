@@ -1,39 +1,48 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Project, TrainingJob } from "@/types";
 import WizardShell from "@/components/wizard/WizardShell";
 
+// Read project ID directly from the URL — useParams() can return "placeholder"
+// during hydration of a static export, causing false "not found" redirects.
+function getProjectIdFromPath(): string | null {
+  if (typeof window === "undefined") return null;
+  const match = window.location.pathname.match(/\/project\/([^/]+)/);
+  const id = match?.[1];
+  return id && id !== "placeholder" ? id : null;
+}
+
 export default function ProjectLayout({ children }: { children: React.ReactNode }) {
-  const params = useParams<{ id: string }>();
   const router = useRouter();
   const [project, setProject] = useState<Project | null>(null);
   const [trainingJob, setTrainingJob] = useState<TrainingJob | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!params?.id) return;
-    const supabase = createClient();
+    const id = getProjectIdFromPath();
+    if (!id) return;
 
+    const supabase = createClient();
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) { router.replace("/auth/login"); return; }
 
       const { data: proj } = await supabase
-        .from("projects").select("*").eq("id", params.id).eq("user_id", user.id).single();
+        .from("projects").select("*").eq("id", id).eq("user_id", user.id).single();
 
       if (!proj) { router.replace("/dashboard"); return; }
 
       const { data: job } = await supabase
-        .from("training_jobs").select("*").eq("project_id", params.id)
+        .from("training_jobs").select("*").eq("project_id", id)
         .order("created_at", { ascending: false }).limit(1).maybeSingle();
 
       setProject(proj as Project);
       setTrainingJob(job as TrainingJob | null);
       setLoading(false);
     });
-  }, [params?.id, router]);
+  }, [router]);
 
   if (loading) {
     return (

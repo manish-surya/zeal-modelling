@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Project, Dataset, Pipeline, TrainingJob } from "@/types";
 import Step1Client from "@/components/step1/Step1Client";
@@ -28,24 +27,31 @@ const Spinner = () => (
   </div>
 );
 
+function getProjectIdFromPath(): string | null {
+  if (typeof window === "undefined") return null;
+  const match = window.location.pathname.match(/\/project\/([^/]+)/);
+  const id = match?.[1];
+  return id && id !== "placeholder" ? id : null;
+}
+
 export default function ProjectStepWrapper({ step }: Props) {
-  const params = useParams<{ id: string }>();
   const [data, setData] = useState<StepData | null>(null);
 
   useEffect(() => {
-    if (!params?.id) return;
+    const id = getProjectIdFromPath();
+    if (!id) return;
     const supabase = createClient();
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return;
 
       const [{ data: project }, { data: dataset }, { data: pipeline }, { data: job }] =
         await Promise.all([
-          supabase.from("projects").select("*").eq("id", params.id).single(),
-          supabase.from("datasets").select("*").eq("project_id", params.id)
+          supabase.from("projects").select("*").eq("id", id).single(),
+          supabase.from("datasets").select("*").eq("project_id", id)
             .order("created_at", { ascending: false }).limit(1).maybeSingle(),
-          supabase.from("pipelines").select("*").eq("project_id", params.id)
+          supabase.from("pipelines").select("*").eq("project_id", id)
             .eq("is_active", true).order("created_at", { ascending: false }).limit(1).maybeSingle(),
-          supabase.from("training_jobs").select("*").eq("project_id", params.id)
+          supabase.from("training_jobs").select("*").eq("project_id", id)
             .order("created_at", { ascending: false }).limit(1).maybeSingle(),
         ]);
 
@@ -53,10 +59,10 @@ export default function ProjectStepWrapper({ step }: Props) {
 
       // Handle step-specific database updates (originally in page components)
       if (step === 4 && project.current_step < 5 && job?.status === "complete") {
-        await supabase.from("projects").update({ current_step: 5 }).eq("id", params.id);
+        await supabase.from("projects").update({ current_step: 5 }).eq("id", id);
         project.current_step = 5;
       } else if (step === 5 && project.status !== "exported") {
-        await supabase.from("projects").update({ status: "exported" }).eq("id", params.id);
+        await supabase.from("projects").update({ status: "exported" }).eq("id", id);
         project.status = "exported";
       }
 
@@ -68,7 +74,7 @@ export default function ProjectStepWrapper({ step }: Props) {
         userId: user.id,
       });
     });
-  }, [params?.id, step]);
+  }, [step]);
 
   if (!data) return <Spinner />;
 
