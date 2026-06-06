@@ -36,6 +36,7 @@ export default function SignupPage() {
       password,
       options: {
         data: { full_name: fullName },
+        emailRedirectTo: "https://manish-surya.github.io/zeal-modelling/auth/confirm",
       },
     });
 
