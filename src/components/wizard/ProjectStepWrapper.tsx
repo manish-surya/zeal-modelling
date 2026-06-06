@@ -50,6 +50,16 @@ export default function ProjectStepWrapper({ step }: Props) {
         ]);
 
       if (!project) return;
+
+      // Handle step-specific database updates (originally in page components)
+      if (step === 4 && project.current_step < 5 && job?.status === "complete") {
+        await supabase.from("projects").update({ current_step: 5 }).eq("id", params.id);
+        project.current_step = 5;
+      } else if (step === 5 && project.status !== "exported") {
+        await supabase.from("projects").update({ status: "exported" }).eq("id", params.id);
+        project.status = "exported";
+      }
+
       setData({
         project: project as Project,
         dataset: dataset as Dataset | null,
@@ -58,7 +68,7 @@ export default function ProjectStepWrapper({ step }: Props) {
         userId: user.id,
       });
     });
-  }, [params?.id]);
+  }, [params?.id, step]);
 
   if (!data) return <Spinner />;
 
