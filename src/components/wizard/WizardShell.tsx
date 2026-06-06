@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LogOut, ArrowLeft } from "lucide-react";
+import { LogOut, ArrowLeft, Moon, Sun } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useTheme } from "@/lib/theme/ThemeContext";
 import { Project, TrainingJob } from "@/types";
 import WizardProgressBar from "./WizardProgressBar";
 
@@ -16,6 +17,7 @@ interface WizardShellProps {
 
 export default function WizardShell({ project, trainingJob, children }: WizardShellProps) {
   const router = useRouter();
+  const { theme, toggle } = useTheme();
   const [projectName, setProjectName] = useState(project.name);
   const [editing, setEditing] = useState(false);
 
@@ -49,7 +51,7 @@ export default function WizardShell({ project, trainingJob, children }: WizardSh
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] flex flex-col">
+    <div className="min-h-screen bg-[var(--z-app)] flex flex-col">
       {/* App Header */}
       <header className="h-14 bg-[#1B3A5C] flex items-center justify-between px-6 flex-shrink-0">
         <div className="flex items-center gap-4">
@@ -83,14 +85,13 @@ export default function WizardShell({ project, trainingJob, children }: WizardSh
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-white/60 text-xs">
-            {project.model_type === "ml_supervised" ? "ML Supervised" : "Deep Learning"}
+          <span className="text-white/60 text-xs hidden sm:inline">
+            {project.problem_type ? project.problem_type.charAt(0).toUpperCase() + project.problem_type.slice(1) : "ML"}
           </span>
-          <button
-            onClick={handleLogout}
-            className="text-white/60 hover:text-white transition-colors ml-3"
-            title="Sign out"
-          >
+          <button onClick={toggle} className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all" title={theme === "dark" ? "Light mode" : "Dark mode"}>
+            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
+          <button onClick={handleLogout} className="text-white/60 hover:text-white transition-colors" title="Sign out">
             <LogOut className="w-4 h-4" />
           </button>
         </div>

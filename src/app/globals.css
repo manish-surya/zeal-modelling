@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    /* shadcn tokens */
     --background: 210 17% 98%;
     --foreground: 0 0% 10%;
     --card: 0 0% 100%;
@@ -24,6 +25,69 @@
     --input: 0 0% 80%;
     --ring: 213 60% 45%;
     --radius: 0.375rem;
+
+    /* Zeal design tokens — light */
+    --z-app:        #F0F2F5;
+    --z-surface:    #FFFFFF;
+    --z-surface-2:  #F8FAFB;
+    --z-header:     #1B3A5C;
+    --z-text:       #111827;
+    --z-text-2:     #6B7280;
+    --z-text-3:     #9CA3AF;
+    --z-border:     #E5E7EB;
+    --z-border-2:   #F3F4F6;
+    --z-accent:     #2E75B6;
+    --z-accent-h:   #1B5C99;
+    --z-accent-bg:  #EFF6FF;
+    --z-success:    #16A34A;
+    --z-success-bg: #F0FDF4;
+    --z-warn:       #D97706;
+    --z-warn-bg:    #FFFBEB;
+    --z-danger:     #DC2626;
+    --z-danger-bg:  #FEF2F2;
+  }
+
+  .dark {
+    /* shadcn dark */
+    --background: 222 20% 9%;
+    --foreground: 210 20% 90%;
+    --card: 222 15% 13%;
+    --card-foreground: 210 20% 90%;
+    --popover: 222 15% 13%;
+    --popover-foreground: 210 20% 90%;
+    --primary: 213 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 213 30% 25%;
+    --secondary-foreground: 210 20% 90%;
+    --muted: 222 15% 18%;
+    --muted-foreground: 215 15% 55%;
+    --accent: 213 70% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 4 67% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 222 15% 22%;
+    --input: 222 15% 22%;
+    --ring: 213 70% 55%;
+
+    /* Zeal design tokens — dark */
+    --z-app:        #18191B;
+    --z-surface:    #242426;
+    --z-surface-2:  #2E2F32;
+    --z-header:     #13151D;
+    --z-text:       #E4E5E7;
+    --z-text-2:     #9CA3AF;
+    --z-text-3:     #6B7280;
+    --z-border:     #3A3B3F;
+    --z-border-2:   #2E2F32;
+    --z-accent:     #4DA6FF;
+    --z-accent-h:   #73BCFF;
+    --z-accent-bg:  #1A2840;
+    --z-success:    #34D399;
+    --z-success-bg: #022C22;
+    --z-warn:       #FBBF24;
+    --z-warn-bg:    #271A00;
+    --z-danger:     #F87171;
+    --z-danger-bg:  #2D0A0A;
   }
 }
 
