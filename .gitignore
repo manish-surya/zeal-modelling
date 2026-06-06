@@ -30,6 +30,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# API routes (not supported in static export / GitHub Pages)
+src/app/api/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
