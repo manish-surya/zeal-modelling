@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 17% 98%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 213 54% 23%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 213 54% 45%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 17% 95%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 213 60% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 4 67% 47%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 80%;
+    --input: 0 0% 80%;
+    --ring: 213 60% 45%;
+    --radius: 0.375rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-body-text;
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 14px;
+  }
+}
+
+/* Wizard progress connector */
+.step-connector {
+  transition: background-color 150ms ease-in-out;
+}
+
+/* Block drag handle */
+.drag-handle {
+  cursor: grab;
+}
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Syntax highlight override */
+pre {
+  border-radius: 6px;
+}
+
+/* Pulse for active step */
+@keyframes stepPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(46, 117, 182, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(46, 117, 182, 0); }
+}
+.step-active-pulse {
+  animation: stepPulse 2s ease-in-out infinite;
+}
