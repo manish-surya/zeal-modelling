@@ -1,6 +1,5 @@
 import ProjectStepWrapper from "@/components/wizard/ProjectStepWrapper";
 
-export const dynamicParams = false;
 export function generateStaticParams() {
   return [{ id: "placeholder" }];
 }
