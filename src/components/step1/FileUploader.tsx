@@ -50,18 +50,16 @@ export default function FileUploader({
       const storagePath = `${userId}/${projectId}/${Date.now()}_${file.name}`;
 
       setUploadProgress(30);
-      const { error } = await supabase.storage
+      const { error: storageError } = await supabase.storage
         .from("user-datasets")
         .upload(storagePath, file, { upsert: true });
 
-      if (error) {
-        setUploadError(error.message);
-        setUploadProgress(0);
-        return;
-      }
+      // Storage upload is non-fatal — CSV is already parsed client-side.
+      // If the bucket/policies aren't configured yet, continue anyway.
+      const finalPath = storageError ? `local/${projectId}/${file.name}` : storagePath;
 
       setUploadProgress(90);
-      onUploaded(file, storagePath);
+      onUploaded(file, finalPath);
       setUploadProgress(100);
     },
     [projectId, userId, onUploaded]

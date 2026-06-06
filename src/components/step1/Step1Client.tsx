@@ -79,7 +79,7 @@ export default function Step1Client({ project, existingDataset, userId }: Step1C
       const rowCount = lines.length - 1;
       const supabase = createClient();
 
-      // Save dataset record
+      // Save dataset record — insert or update existing dataset for this project
       const { data: newDataset, error: dbError } = await supabase
         .from("datasets")
         .upsert({
