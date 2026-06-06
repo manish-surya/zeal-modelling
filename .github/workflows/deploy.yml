@@ -32,6 +32,14 @@ jobs:
           ML_SERVICE_API_KEY: placeholder_for_now
         run: npm run build
 
+      - name: Verify out directory was created
+        run: |
+          if [ ! -d "./out" ]; then
+            echo "ERROR: ./out directory not found. Build did not produce static export."
+            exit 1
+          fi
+          echo "out/ contents:" && ls ./out | head -20
+
       - name: Add .nojekyll
         run: touch ./out/.nojekyll
 
