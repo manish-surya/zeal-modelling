@@ -1,12 +1,4 @@
-import { type NextRequest } from "next/server";
-import { updateSession } from "@/lib/supabase/middleware";
-
-export async function middleware(request: NextRequest) {
-  return await updateSession(request);
-}
-
-export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
-};
+// Static export: middleware is not supported on GitHub Pages.
+// Auth protection is handled client-side via AuthGuard components.
+export function middleware() {}
+export const config = { matcher: [] };

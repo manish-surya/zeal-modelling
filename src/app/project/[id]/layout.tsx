@@ -1,39 +1,52 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { Project, TrainingJob } from "@/types";
 import WizardShell from "@/components/wizard/WizardShell";
 
-interface ProjectLayoutProps {
-  children: React.ReactNode;
-  params: Promise<{ id: string }>;
-}
+export default function ProjectLayout({ children }: { children: React.ReactNode }) {
+  const params = useParams<{ id: string }>();
+  const router = useRouter();
+  const [project, setProject] = useState<Project | null>(null);
+  const [trainingJob, setTrainingJob] = useState<TrainingJob | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export default async function ProjectLayout({ children, params }: ProjectLayoutProps) {
-  const { id } = await params;
-  const supabase = await createClient();
+  useEffect(() => {
+    if (!params?.id) return;
+    const supabase = createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/auth/login");
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) { router.replace("/auth/login"); return; }
 
-  const { data: project } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("id", id)
-    .eq("user_id", user.id)
-    .single();
+      const { data: proj } = await supabase
+        .from("projects").select("*").eq("id", params.id).eq("user_id", user.id).single();
 
-  if (!project) redirect("/dashboard");
+      if (!proj) { router.replace("/dashboard"); return; }
 
-  // Fetch latest training job to determine step unlock state
-  const { data: latestJob } = await supabase
-    .from("training_jobs")
-    .select("*")
-    .eq("project_id", id)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+      const { data: job } = await supabase
+        .from("training_jobs").select("*").eq("project_id", params.id)
+        .order("created_at", { ascending: false }).limit(1).maybeSingle();
+
+      setProject(proj as Project);
+      setTrainingJob(job as TrainingJob | null);
+      setLoading(false);
+    });
+  }, [params?.id, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#2E75B6] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!project) return null;
 
   return (
-    <WizardShell project={project} trainingJob={latestJob}>
+    <WizardShell project={project} trainingJob={trainingJob}>
       {children}
     </WizardShell>
   );
