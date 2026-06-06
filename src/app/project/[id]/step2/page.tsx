@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Project, Dataset, Pipeline } from "@/types";
 import Step2Client from "@/components/step2/Step2Client";
 
+export const dynamicParams = false;
 export function generateStaticParams() { return []; }
 
 export default function Step2Page() {

@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Project, TrainingJob } from "@/types";
 import Step4Client from "@/components/step4/Step4Client";
 
+export const dynamicParams = false;
 export function generateStaticParams() { return []; }
 
 export default function Step4Page() {
