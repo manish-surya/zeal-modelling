@@ -58,27 +58,31 @@ export interface Dataset {
 
 // Pipeline block types
 export type BlockType =
-  // Numeric
-  | "imputer"
-  | "scaler"
-  | "polynomial_features"
-  | "log_transform"
-  | "binning"
-  | "outlier_removal"
-  // Categorical
-  | "one_hot_encoder"
-  | "label_encoder"
-  | "ordinal_encoder"
-  | "frequency_encoder"
-  | "categorical_imputer"
-  // Column-level
-  | "drop_columns"
-  | "select_features"
-  | "rename_column"
-  | "datetime_extractor"
-  | "text_vectoriser"
-  | "correlation_filter"
-  | "variance_filter";
+  // 🧹 Data Cleaning
+  | "imputer" | "categorical_imputer" | "outlier_removal" | "duplicate_removal"
+  // 📏 Scaling & Normalization
+  | "scaler" | "normalizer" | "maxabs_scaler"
+  // 🏷️ Encoding
+  | "one_hot_encoder" | "label_encoder" | "ordinal_encoder"
+  | "target_encoder" | "frequency_encoder"
+  // 🔄 Transformation
+  | "log_transform" | "power_transform" | "quantile_transform" | "sqrt_transform"
+  // ⚗️ Feature Generation
+  | "polynomial_features" | "binning" | "datetime_extractor" | "text_vectoriser"
+  // 🎯 Feature Selection
+  | "variance_filter" | "correlation_filter" | "select_k_best" | "feature_selection_model"
+  // 📉 Dimensionality Reduction
+  | "pca" | "truncated_svd" | "kernel_pca"
+  // 📁 Column Operations
+  | "select_features" | "drop_columns" | "column_splitter" | "column_merger";
+
+export interface ParamTuning {
+  type: "range";
+  min: number; max: number; step?: number;
+} | {
+  type: "values";
+  values: unknown[];
+}
 
 export interface PipelineBlock {
   id: string;
@@ -86,14 +90,13 @@ export interface PipelineBlock {
   params: Record<string, unknown>;
   column_targets: string[];
   label?: string;
+  tuning?: Record<string, ParamTuning>;
 }
 
 export type PipelineTemplate =
-  | "classification"
-  | "regression"
-  | "time_series"
-  | "nlp"
-  | "blank";
+  | "classification" | "regression" | "time_series" | "nlp"
+  | "feature_selection" | "dim_reduction" | "cleaning_only"
+  | "categorical_heavy" | "blank";
 
 export interface Pipeline {
   id: string;

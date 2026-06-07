@@ -97,7 +97,7 @@ function ProjectPageInner() {
   return (
     <WizardShell project={project} trainingJob={trainingJob}>
       {content}
-    </WizardShell>
+    </WizardShell dataset={dataset} />
   );
 }
 

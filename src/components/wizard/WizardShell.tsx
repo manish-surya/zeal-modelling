@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LogOut, ArrowLeft, Moon, Sun } from "lucide-react";
+import { LogOut, ArrowLeft, Moon, Sun, BarChart3 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useTheme } from "@/lib/theme/ThemeContext";
 import { Project, TrainingJob } from "@/types";
 import WizardProgressBar from "./WizardProgressBar";
+import DataAnalyticsPanel from "@/components/analytics/DataAnalyticsPanel";
 
 interface WizardShellProps {
   project: Project;
@@ -15,11 +16,12 @@ interface WizardShellProps {
   children: React.ReactNode;
 }
 
-export default function WizardShell({ project, trainingJob, children }: WizardShellProps) {
+export default function WizardShell({ project, trainingJob, children, dataset }: WizardShellProps & { dataset?: import("@/types").Dataset | null }) {
   const router = useRouter();
   const { theme, toggle } = useTheme();
   const [projectName, setProjectName] = useState(project.name);
   const [editing, setEditing] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   // Compute highest unlocked step
   const getCompletedUpTo = (): number => {
@@ -88,6 +90,13 @@ export default function WizardShell({ project, trainingJob, children }: WizardSh
           <span className="text-white/60 text-xs hidden sm:inline">
             {project.problem_type ? project.problem_type.charAt(0).toUpperCase() + project.problem_type.slice(1) : "ML"}
           </span>
+          {dataset?.column_meta && (
+            <button onClick={() => setShowAnalytics(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition-all"
+              title="Data Analytics">
+              <BarChart3 className="w-3.5 h-3.5" /> Analytics
+            </button>
+          )}
           <button onClick={toggle} className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all" title={theme === "dark" ? "Light mode" : "Dark mode"}>
             {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
@@ -108,6 +117,16 @@ export default function WizardShell({ project, trainingJob, children }: WizardSh
       <main className="flex-1 overflow-auto">
         {children}
       </main>
+
+      {/* Data Analytics slide-over */}
+      {showAnalytics && dataset?.column_meta && (
+        <DataAnalyticsPanel
+          columnMeta={dataset.column_meta}
+          fileName={dataset.file_name ?? "Dataset"}
+          rowCount={dataset.row_count ?? 0}
+          onClose={() => setShowAnalytics(false)}
+        />
+      )}
     </div>
   );
 }
