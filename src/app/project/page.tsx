@@ -95,9 +95,9 @@ function ProjectPageInner() {
   else if (step === 5) content = <Step5Client project={project} dataset={dataset} pipeline={pipeline} job={completedJob} />;
 
   return (
-    <WizardShell project={project} trainingJob={trainingJob}>
+    <WizardShell project={project} trainingJob={trainingJob} dataset={dataset}>
       {content}
-    </WizardShell dataset={dataset} />
+    </WizardShell>
   );
 }
 
